@@ -21,7 +21,9 @@ class MyApp extends StatelessWidget {
             headline6: TextStyle(
                 fontFamily: 'OpenSans',
                 fontWeight: FontWeight.bold,
-                fontSize: 18)),
+                fontSize: 18),
+            button: TextStyle(color: Colors.white)
+        ),
         appBarTheme: AppBarTheme(
             textTheme: ThemeData.light().textTheme.copyWith(
                 headline6: TextStyle(
@@ -42,12 +44,12 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final List<Transaction> _transactions = [
-    // Transaction(
-    //     id: 't1', title: 'New Shoe', amount: 59.99, date: DateTime.now()),
-    // Transaction(
-    //     id: 't2', title: 'New CPU', amount: 159.99, date: DateTime.now()),
-    // Transaction(
-    //     id: 't3', title: 'New GPU', amount: 259.99, date: DateTime.now())
+     Transaction(
+         id: 't1', title: 'New Shoe', amount: 59.99, date: DateTime.now()),
+     Transaction(
+         id: 't2', title: 'New CPU', amount: 159.99, date: DateTime.now()),
+     Transaction(
+         id: 't3', title: 'New GPU', amount: 259.99, date: DateTime.now())
   ];
 
   List<Transaction> get _recentTransactions {
@@ -57,12 +59,12 @@ class _MyHomePageState extends State<MyHomePage> {
         .toList();
   }
 
-  void _addNewTransaction(String title, double amount) {
+  void _addNewTransaction(String title, double amount, DateTime chosenDate) {
     final newTx = Transaction(
         id: DateTime.now().toString(),
         title: title,
         amount: amount,
-        date: DateTime.now());
+        date: chosenDate);
     setState(() {
       _transactions.add(newTx);
     });
@@ -78,6 +80,12 @@ class _MyHomePageState extends State<MyHomePage> {
             behavior: HitTestBehavior.opaque,
           );
         });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      _transactions.removeWhere((tx) => tx.id == id);
+    });
   }
 
   @override
@@ -97,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Chart(_recentTransactions),
-            TransactionList(_transactions)
+            TransactionList(_transactions, _deleteTransaction)
           ],
         ),
       ),
